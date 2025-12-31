@@ -4,8 +4,6 @@ import {
   CATEGORIES_PACKAGE_NAME,
   CATEGORY_SERVICE_NAME,
   CategoryServiceClient,
-  CreateCategoryReq,
-  UpdateCategoryReq,
 } from 'src/types/proto/categories';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';

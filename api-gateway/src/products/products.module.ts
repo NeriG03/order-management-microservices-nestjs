@@ -15,6 +15,7 @@ import { CATEGORIES_PACKAGE_NAME } from 'src/types/proto/categories';
         options: {
           package: PRODUCTS_PACKAGE_NAME,
           protoPath: join(__dirname, '../products.proto'),
+          url: 'localhost:50051',
         },
       },
       {
@@ -23,6 +24,7 @@ import { CATEGORIES_PACKAGE_NAME } from 'src/types/proto/categories';
         options: {
           package: CATEGORIES_PACKAGE_NAME,
           protoPath: join(__dirname, '../categories.proto'),
+          url: 'localhost:50051',
         },
       },
     ]),
