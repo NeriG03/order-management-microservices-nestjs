@@ -10,7 +10,7 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "products";
 
-export interface ProductReq {
+export interface GetProductIDReq {
   productId: number;
 }
 
@@ -23,6 +23,28 @@ export interface ProductRes {
   categoryId: number;
 }
 
+export interface CreateProductReq {
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  categoryId: number;
+}
+
+export interface UpdateProductReq {
+  productId: number;
+  name?: string | undefined;
+  description?: string | undefined;
+  price?: number | undefined;
+  stock?: number | undefined;
+  categoryId?: number | undefined;
+}
+
+export interface DeleteProductRes {
+  success: boolean;
+  message: string;
+}
+
 export interface ProductByCategoryReq {
   categoryId: number;
 }
@@ -31,25 +53,101 @@ export interface ProductListRes {
   products: ProductRes[];
 }
 
+export interface GetCategoryIDReq {
+  categoryId: number;
+}
+
+/** Empty request for getting all categories */
+export interface GetCategoriesReq {
+}
+
+export interface CategoryRes {
+  categoryId: number;
+  name: string;
+}
+
+export interface CategoryListRes {
+  categories: CategoryRes[];
+}
+
+export interface CreateCategoryReq {
+  name: string;
+}
+
+export interface UpdateCategoryReq {
+  categoryId: number;
+  name?: string | undefined;
+}
+
+export interface DeleteCategoryRes {
+  success: boolean;
+  message: string;
+}
+
 export const PRODUCTS_PACKAGE_NAME = "products";
 
 export interface ProductServiceClient {
-  getProduct(request: ProductReq): Observable<ProductRes>;
+  getProduct(request: GetProductIDReq): Observable<ProductRes>;
 
   getProductsByCategory(request: ProductByCategoryReq): Observable<ProductListRes>;
+
+  createProduct(request: CreateProductReq): Observable<ProductRes>;
+
+  updateProduct(request: UpdateProductReq): Observable<ProductRes>;
+
+  deleteProduct(request: GetProductIDReq): Observable<DeleteProductRes>;
+
+  getCategory(request: GetCategoryIDReq): Observable<CategoryRes>;
+
+  getCategories(request: GetCategoriesReq): Observable<CategoryListRes>;
+
+  createCategory(request: CreateCategoryReq): Observable<CategoryRes>;
+
+  updateCategory(request: UpdateCategoryReq): Observable<CategoryRes>;
+
+  deleteCategory(request: GetCategoryIDReq): Observable<DeleteCategoryRes>;
 }
 
 export interface ProductServiceController {
-  getProduct(request: ProductReq): Promise<ProductRes> | Observable<ProductRes> | ProductRes;
+  getProduct(request: GetProductIDReq): Promise<ProductRes> | Observable<ProductRes> | ProductRes;
 
   getProductsByCategory(
     request: ProductByCategoryReq,
   ): Promise<ProductListRes> | Observable<ProductListRes> | ProductListRes;
+
+  createProduct(request: CreateProductReq): Promise<ProductRes> | Observable<ProductRes> | ProductRes;
+
+  updateProduct(request: UpdateProductReq): Promise<ProductRes> | Observable<ProductRes> | ProductRes;
+
+  deleteProduct(request: GetProductIDReq): Promise<DeleteProductRes> | Observable<DeleteProductRes> | DeleteProductRes;
+
+  getCategory(request: GetCategoryIDReq): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes;
+
+  getCategories(request: GetCategoriesReq): Promise<CategoryListRes> | Observable<CategoryListRes> | CategoryListRes;
+
+  createCategory(request: CreateCategoryReq): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes;
+
+  updateCategory(request: UpdateCategoryReq): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes;
+
+  deleteCategory(
+    request: GetCategoryIDReq,
+  ): Promise<DeleteCategoryRes> | Observable<DeleteCategoryRes> | DeleteCategoryRes;
 }
 
 export function ProductServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getProduct", "getProductsByCategory"];
+    const grpcMethods: string[] = [
+      "getProduct",
+      "getProductsByCategory",
+      "createProduct",
+      "updateProduct",
+      "deleteProduct",
+      "getCategory",
+      "getCategories",
+      "createCategory",
+      "updateCategory",
+      "deleteCategory",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("ProductService", method)(constructor.prototype[method], method, descriptor);

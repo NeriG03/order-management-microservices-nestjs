@@ -3,11 +3,20 @@ syntax = "proto3";
 package products;
 
 service ProductService {
-    rpc getProduct(ProductReq) returns (ProductRes);
+    rpc getProduct(GetProductIDReq) returns (ProductRes);
     rpc getProductsByCategory(ProductByCategoryReq) returns (ProductListRes);
+    rpc createProduct(CreateProductReq) returns (ProductRes);
+    rpc updateProduct(UpdateProductReq) returns (ProductRes);
+    rpc deleteProduct(GetProductIDReq) returns (DeleteProductRes);
+
+    rpc getCategory(GetCategoryIDReq) returns (CategoryRes);
+    rpc getCategories(GetCategoriesReq) returns (CategoryListRes);
+    rpc createCategory(CreateCategoryReq) returns (CategoryRes);
+    rpc updateCategory(UpdateCategoryReq) returns (CategoryRes);
+    rpc deleteCategory(GetCategoryIDReq) returns (DeleteCategoryRes);
 }
 
-message ProductReq {
+message GetProductIDReq {
     int32 productId = 1;
 }
 
@@ -15,9 +24,31 @@ message ProductRes {
     int32 productId = 1;
     string name = 2;
     string description = 3;
-    int32 price = 4;
+    double price = 4;
     int32 stock = 5;
     int32 categoryId = 6;
+}
+
+message CreateProductReq {
+    string name = 1;
+    string description = 2;
+    double price = 3;
+    int32 stock = 4;
+    int32 categoryId = 5;
+}
+
+message UpdateProductReq {
+    int32 productId = 1;
+    optional string name = 2;
+    optional string description = 3;
+    optional double price = 4;
+    optional int32 stock = 5;
+    optional int32 categoryId = 6;
+}
+
+message DeleteProductRes {
+    bool success = 1;
+    string message = 2;
 }
 
 message ProductByCategoryReq {
@@ -26,4 +57,35 @@ message ProductByCategoryReq {
 
 message ProductListRes {
     repeated ProductRes products = 1;
+}
+
+message GetCategoryIDReq {
+    int32 categoryId = 1;
+}
+
+message GetCategoriesReq {
+    // Empty request for getting all categories
+}
+
+message CategoryRes {
+    int32 categoryId = 1;
+    string name = 2;
+}
+
+message CategoryListRes {
+    repeated CategoryRes categories = 1;
+}
+
+message CreateCategoryReq {
+    string name = 1;
+}
+
+message UpdateCategoryReq {
+    int32 categoryId = 1;
+    optional string name = 2;
+}
+
+message DeleteCategoryRes {
+    bool success = 1;
+    string message = 2;
 }
