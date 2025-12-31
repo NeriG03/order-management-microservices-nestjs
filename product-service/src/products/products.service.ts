@@ -5,14 +5,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import { Category } from 'src/categories/entities/category.entity';
+import { ProductOrderRequest } from 'src/types/proto/products_order';
 
 @Injectable()
 export class ProductsService {
-  @InjectRepository(Product)
-  private readonly productRepository: Repository<Product>;
-  @InjectRepository(Category)
-  private readonly categoryRepository: Repository<Category>;
-
+  constructor(
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
+  ) {}
   async create(createProductDto: CreateProductDto): Promise<Product> {
     const category = await this.categoryRepository.findOneBy({ id: createProductDto.categoryId });
     if (!category) {
@@ -66,5 +68,30 @@ export class ProductsService {
     }
     await this.productRepository.delete(id);
     return { success: true, message: `Product with ID ${id} deleted successfully` };
+  }
+
+  /*
+   *
+   * PRODUCTS ORDER METHODS HERE
+   *
+   */
+  async checkProductsAvailability(productReq: ProductOrderRequest): Promise<boolean> {
+    const product = await this.productRepository.findOneBy({ id: productReq.productId });
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+    if (product.stock < productReq.quantity) {
+      return false;
+    }
+    return true;
+  }
+
+  async orderCompleted(productReq: ProductOrderRequest): Promise<void> {
+    const product = await this.productRepository.findOneBy({ id: productReq.productId });
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+    product.stock -= productReq.quantity;
+    await this.productRepository.save(product);
   }
 }
