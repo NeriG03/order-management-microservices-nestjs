@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package orders;
+
+service OrderService {
+    rpc createOrder(CreateOrderListReq) returns (OrderRes);
+    rpc getOrder(GetOrderIDReq) returns (OrderRes);
+    rpc getOrders(GetOrdersReq) returns (OrderListRes);
+    rpc deleteOrder(GetOrderIDReq) returns (DeleteOrderRes);
+}
+
+message CreateOrderReq {
+    int32 productId = 1;
+    int32 quantity = 2;
+    int32 unitPrice = 3;
+}
+
+message CreateOrderListReq {
+    repeated CreateOrderReq details = 1;
+}
+
+message GetOrderIDReq {
+    int32 orderId = 1;
+}
+
+message GetOrdersReq {
+    // Empty request for getting all orders
+}
+message OrderRes {
+    int32 orderId = 1;
+    repeated OrderDetail details = 2;
+    double totalAmount = 3;
+    string createdAt = 4;
+}
+
+message OrderDetail {
+    int32 productId = 1;
+    int32 quantity = 2;
+    int32 unitPrice = 3;
+    double subTotal = 4;
+}
+
+message OrderListRes {
+    repeated OrderRes orders = 1;
+}
+
+message DeleteOrderRes {
+    bool success = 1;
+    string message = 2;
+}
