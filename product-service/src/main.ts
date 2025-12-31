@@ -17,6 +17,7 @@ async function bootstrap() {
         join(__dirname, '../proto/categories.proto'),
         join(__dirname, '../proto/products_order.proto'),
       ],
+      url: 'localhost:50051',
     },
   });
 
