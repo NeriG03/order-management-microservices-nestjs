@@ -1,4 +1,13 @@
-import { Controller, Get, Inject, OnModuleInit, Param } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  OnModuleInit,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ClientGrpc, MessagePattern, Payload } from '@nestjs/microservices';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -8,7 +17,7 @@ import {
   ProductServiceClient,
 } from 'src/types/proto/products';
 
-@Controller('product')
+@Controller('products')
 export class ProductsController implements OnModuleInit {
   private productsService: ProductServiceClient;
   constructor(@Inject(PRODUCTS_PACKAGE_NAME) private client: ClientGrpc) {}
@@ -16,6 +25,11 @@ export class ProductsController implements OnModuleInit {
   onModuleInit() {
     this.productsService =
       this.client.getService<ProductServiceClient>(PRODUCT_SERVICE_NAME);
+  }
+
+  @Post()
+  create(@Payload() createProductDto: CreateProductDto) {
+    return this.productsService.createProduct(createProductDto);
   }
 
   @Get(':id')
@@ -28,5 +42,21 @@ export class ProductsController implements OnModuleInit {
     return this.productsService.getProductsByCategory({
       categoryId: +categoryId,
     });
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Payload() updateProductDto: UpdateProductDto,
+  ) {
+    return this.productsService.updateProduct({
+      productId: +id,
+      ...updateProductDto,
+    });
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.productsService.deleteProduct({ productId: +id });
   }
 }
