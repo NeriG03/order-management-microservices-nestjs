@@ -1,8 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import {
   CreateProductReq,
   DeleteProductRes,
@@ -14,26 +11,55 @@ import {
   ProductServiceControllerMethods,
   UpdateProductReq,
 } from 'src/types/proto/products';
-import { Observable } from 'rxjs';
 
 @Controller()
 @ProductServiceControllerMethods()
 export class ProductsController implements ProductServiceController {
   constructor(private readonly productsService: ProductsService) {}
-  createProduct(
-    request: CreateProductReq,
-  ): Promise<ProductRes> | Observable<ProductRes> | ProductRes {
-    throw new Error('Method not implemented.');
+
+  async createProduct(request: CreateProductReq): Promise<ProductRes> {
+    const product = await this.productsService.create({
+      name: request.name,
+      description: request.description,
+      price: request.price,
+      stock: request.stock,
+      categoryId: request.categoryId,
+    });
+    return {
+      productId: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      stock: product.stock,
+      categoryId: product.category.id,
+    };
   }
-  updateProduct(
-    request: UpdateProductReq,
-  ): Promise<ProductRes> | Observable<ProductRes> | ProductRes {
-    throw new Error('Method not implemented.');
+
+  async updateProduct(request: UpdateProductReq): Promise<ProductRes> {
+    const product = await this.productsService.update(request.productId, {
+      name: request.name,
+      description: request.description,
+      price: request.price,
+      stock: request.stock,
+      categoryId: request.categoryId,
+    });
+
+    return {
+      productId: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      stock: product.stock,
+      categoryId: product.category.id,
+    };
   }
-  deleteProduct(
-    request: GetProductIDReq,
-  ): Promise<DeleteProductRes> | Observable<DeleteProductRes> | DeleteProductRes {
-    throw new Error('Method not implemented.');
+
+  async deleteProduct(request: GetProductIDReq): Promise<DeleteProductRes> {
+    const result = await this.productsService.remove(request.productId);
+    return {
+      success: result.success,
+      message: result.message,
+    };
   }
 
   async getProduct(request: GetProductIDReq): Promise<ProductRes> {

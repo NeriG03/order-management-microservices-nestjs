@@ -55,10 +55,16 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException('Product not found');
     }
-    return this.productRepository.save(product);
+    await this.productRepository.update(id, updateProductDto);
+    return this.findOne(id);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<{ success: boolean; message: string }> {
+    const product = await this.productRepository.findOneBy({ id });
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
     await this.productRepository.delete(id);
+    return { success: true, message: `Product with ID ${id} deleted successfully` };
   }
 }
