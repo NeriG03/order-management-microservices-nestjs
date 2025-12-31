@@ -1,35 +1,39 @@
-import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
-import { OrdersService } from './orders.service';
+import { Controller, Delete, Get, Inject, OnModuleInit, Param, Post } from '@nestjs/common';
+import { ClientGrpc, Payload } from '@nestjs/microservices';
+
+import {
+  ORDERS_PACKAGE_NAME,
+  ORDER_SERVICE_NAME,
+  OrderServiceClient,
+} from 'src/types/proto/orders';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 
-@Controller('order')
-export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+@Controller('orders')
+export class OrdersController implements OnModuleInit {
+  private ordersService: OrderServiceClient;
+  constructor(@Inject(ORDERS_PACKAGE_NAME) private client: ClientGrpc) {}
 
-  @MessagePattern('createOrder')
+  onModuleInit() {
+    this.ordersService = this.client.getService<OrderServiceClient>(ORDER_SERVICE_NAME);
+  }
+
+  @Post()
   create(@Payload() createOrderDto: CreateOrderDto) {
-    return this.ordersService.create(createOrderDto);
+    return this.ordersService.createOrder(createOrderDto);
   }
 
-  @MessagePattern('findAllOrders')
+  @Get()
   findAll() {
-    return this.ordersService.findAll();
+    return this.ordersService.getOrders({});
   }
 
-  @MessagePattern('findOneOrder')
-  findOne(@Payload() id: number) {
-    return this.ordersService.findOne(id);
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.ordersService.getOrder({ orderId: +id });
   }
 
-  @MessagePattern('updateOrder')
-  update(@Payload() updateOrderDto: UpdateOrderDto) {
-    return this.ordersService.update(updateOrderDto.id, updateOrderDto);
-  }
-
-  @MessagePattern('removeOrder')
-  remove(@Payload() id: number) {
-    return this.ordersService.remove(id);
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.ordersService.deleteOrder({ orderId: +id });
   }
 }
