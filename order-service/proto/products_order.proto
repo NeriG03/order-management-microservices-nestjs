@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package products_order;
+
+service ProductsOrderService {
+    rpc CheckProductAvailability (ProductOrderRequest) returns (ProductAvailabilityResponse);
+    rpc OrderCompleted (ProductOrderRequest) returns (OrderCompletedResponse);
+}
+
+message ProductOrderRequest {
+    int32 product_id = 1;
+    int32 quantity = 2;
+}
+message ProductAvailabilityResponse {
+    bool available = 1;
+}
+message OrderCompletedResponse {
+}
