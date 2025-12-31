@@ -18,29 +18,50 @@ import { Observable } from 'rxjs';
 @Controller()
 export class CategoriesController implements CategoryServiceController {
   constructor(private readonly categoriesService: CategoriesService) {}
-  getCategory(
-    request: GetCategoryIDReq,
-  ): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes {
-    throw new Error('Method not implemented.');
+
+  async getCategory(request: GetCategoryIDReq): Promise<CategoryRes> {
+    const category = await this.categoriesService.findOne(request.categoryId);
+    return {
+      categoryId: category.id,
+      name: category.name,
+    };
   }
-  getCategories(
-    request: GetCategoriesReq,
-  ): Promise<CategoryListRes> | Observable<CategoryListRes> | CategoryListRes {
-    throw new Error('Method not implemented.');
+
+  async getCategories(request: GetCategoriesReq): Promise<CategoryListRes> {
+    const categories = await this.categoriesService.findAll();
+    return {
+      categories: categories.map(category => ({
+        categoryId: category.id,
+        name: category.name,
+      })),
+    };
   }
-  createCategory(
-    request: CreateCategoryReq,
-  ): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes {
-    throw new Error('Method not implemented.');
+
+  async createCategory(request: CreateCategoryReq): Promise<CategoryRes> {
+    const category = await this.categoriesService.create({
+      name: request.name,
+    });
+    return {
+      categoryId: category.id,
+      name: category.name,
+    };
   }
-  updateCategory(
-    request: UpdateCategoryReq,
-  ): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes {
-    throw new Error('Method not implemented.');
+
+  async updateCategory(request: UpdateCategoryReq): Promise<CategoryRes> {
+    const category = await this.categoriesService.update(request.categoryId, {
+      name: request.name,
+    });
+    return {
+      categoryId: category.id,
+      name: category.name,
+    };
   }
-  deleteCategory(
-    request: GetCategoryIDReq,
-  ): Promise<DeleteCategoryRes> | Observable<DeleteCategoryRes> | DeleteCategoryRes {
-    throw new Error('Method not implemented.');
+
+  async deleteCategory(request: GetCategoryIDReq): Promise<DeleteCategoryRes> {
+    const result = await this.categoriesService.remove(request.categoryId);
+    return {
+      success: result.success,
+      message: result.message,
+    };
   }
 }
