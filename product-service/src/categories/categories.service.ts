@@ -39,7 +39,7 @@ export class CategoriesService {
       throw new NotFoundException(`Category with ID ${id} not found`);
     }
 
-    this.categoriesRepository.update(id, updateCategoryDto);
+    await this.categoriesRepository.update(id, updateCategoryDto);
     const updatedCategory = await this.categoriesRepository.findOne({
       where: { id },
       select: ['id', 'name'],

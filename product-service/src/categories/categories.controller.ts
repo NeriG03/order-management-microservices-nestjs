@@ -4,6 +4,7 @@ import {
   CategoryListRes,
   CategoryRes,
   CategoryServiceController,
+  CategoryServiceControllerMethods,
   CreateCategoryReq,
   DeleteCategoryRes,
   GetCategoriesReq,
@@ -12,6 +13,7 @@ import {
 } from 'src/types/proto/categories';
 
 @Controller()
+@CategoryServiceControllerMethods()
 export class CategoriesController implements CategoryServiceController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
