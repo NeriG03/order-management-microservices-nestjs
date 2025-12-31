@@ -53,37 +53,6 @@ export interface ProductListRes {
   products: ProductRes[];
 }
 
-export interface GetCategoryIDReq {
-  categoryId: number;
-}
-
-/** Empty request for getting all categories */
-export interface GetCategoriesReq {
-}
-
-export interface CategoryRes {
-  categoryId: number;
-  name: string;
-}
-
-export interface CategoryListRes {
-  categories: CategoryRes[];
-}
-
-export interface CreateCategoryReq {
-  name: string;
-}
-
-export interface UpdateCategoryReq {
-  categoryId: number;
-  name?: string | undefined;
-}
-
-export interface DeleteCategoryRes {
-  success: boolean;
-  message: string;
-}
-
 export const PRODUCTS_PACKAGE_NAME = "products";
 
 export interface ProductServiceClient {
@@ -96,16 +65,6 @@ export interface ProductServiceClient {
   updateProduct(request: UpdateProductReq): Observable<ProductRes>;
 
   deleteProduct(request: GetProductIDReq): Observable<DeleteProductRes>;
-
-  getCategory(request: GetCategoryIDReq): Observable<CategoryRes>;
-
-  getCategories(request: GetCategoriesReq): Observable<CategoryListRes>;
-
-  createCategory(request: CreateCategoryReq): Observable<CategoryRes>;
-
-  updateCategory(request: UpdateCategoryReq): Observable<CategoryRes>;
-
-  deleteCategory(request: GetCategoryIDReq): Observable<DeleteCategoryRes>;
 }
 
 export interface ProductServiceController {
@@ -120,18 +79,6 @@ export interface ProductServiceController {
   updateProduct(request: UpdateProductReq): Promise<ProductRes> | Observable<ProductRes> | ProductRes;
 
   deleteProduct(request: GetProductIDReq): Promise<DeleteProductRes> | Observable<DeleteProductRes> | DeleteProductRes;
-
-  getCategory(request: GetCategoryIDReq): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes;
-
-  getCategories(request: GetCategoriesReq): Promise<CategoryListRes> | Observable<CategoryListRes> | CategoryListRes;
-
-  createCategory(request: CreateCategoryReq): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes;
-
-  updateCategory(request: UpdateCategoryReq): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes;
-
-  deleteCategory(
-    request: GetCategoryIDReq,
-  ): Promise<DeleteCategoryRes> | Observable<DeleteCategoryRes> | DeleteCategoryRes;
 }
 
 export function ProductServiceControllerMethods() {
@@ -142,11 +89,6 @@ export function ProductServiceControllerMethods() {
       "createProduct",
       "updateProduct",
       "deleteProduct",
-      "getCategory",
-      "getCategories",
-      "createCategory",
-      "updateCategory",
-      "deleteCategory",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

@@ -8,12 +8,6 @@ service ProductService {
     rpc createProduct(CreateProductReq) returns (ProductRes);
     rpc updateProduct(UpdateProductReq) returns (ProductRes);
     rpc deleteProduct(GetProductIDReq) returns (DeleteProductRes);
-
-    rpc getCategory(GetCategoryIDReq) returns (CategoryRes);
-    rpc getCategories(GetCategoriesReq) returns (CategoryListRes);
-    rpc createCategory(CreateCategoryReq) returns (CategoryRes);
-    rpc updateCategory(UpdateCategoryReq) returns (CategoryRes);
-    rpc deleteCategory(GetCategoryIDReq) returns (DeleteCategoryRes);
 }
 
 message GetProductIDReq {
@@ -57,35 +51,4 @@ message ProductByCategoryReq {
 
 message ProductListRes {
     repeated ProductRes products = 1;
-}
-
-message GetCategoryIDReq {
-    int32 categoryId = 1;
-}
-
-message GetCategoriesReq {
-    // Empty request for getting all categories
-}
-
-message CategoryRes {
-    int32 categoryId = 1;
-    string name = 2;
-}
-
-message CategoryListRes {
-    repeated CategoryRes categories = 1;
-}
-
-message CreateCategoryReq {
-    string name = 1;
-}
-
-message UpdateCategoryReq {
-    int32 categoryId = 1;
-    optional string name = 2;
-}
-
-message DeleteCategoryRes {
-    bool success = 1;
-    string message = 2;
 }
