@@ -5,10 +5,10 @@
 // source: proto/products.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "products";
+export const protobufPackage = 'products';
 
 export interface GetProductIDReq {
   productId: number;
@@ -53,7 +53,7 @@ export interface ProductListRes {
   products: ProductRes[];
 }
 
-export const PRODUCTS_PACKAGE_NAME = "products";
+export const PRODUCTS_PACKAGE_NAME = 'products';
 
 export interface ProductServiceClient {
   getProduct(request: GetProductIDReq): Observable<ProductRes>;
@@ -74,32 +74,38 @@ export interface ProductServiceController {
     request: ProductByCategoryReq,
   ): Promise<ProductListRes> | Observable<ProductListRes> | ProductListRes;
 
-  createProduct(request: CreateProductReq): Promise<ProductRes> | Observable<ProductRes> | ProductRes;
+  createProduct(
+    request: CreateProductReq,
+  ): Promise<ProductRes> | Observable<ProductRes> | ProductRes;
 
-  updateProduct(request: UpdateProductReq): Promise<ProductRes> | Observable<ProductRes> | ProductRes;
+  updateProduct(
+    request: UpdateProductReq,
+  ): Promise<ProductRes> | Observable<ProductRes> | ProductRes;
 
-  deleteProduct(request: GetProductIDReq): Promise<DeleteProductRes> | Observable<DeleteProductRes> | DeleteProductRes;
+  deleteProduct(
+    request: GetProductIDReq,
+  ): Promise<DeleteProductRes> | Observable<DeleteProductRes> | DeleteProductRes;
 }
 
 export function ProductServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "getProduct",
-      "getProductsByCategory",
-      "createProduct",
-      "updateProduct",
-      "deleteProduct",
+      'getProduct',
+      'getProductsByCategory',
+      'createProduct',
+      'updateProduct',
+      'deleteProduct',
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("ProductService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('ProductService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("ProductService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('ProductService', method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const PRODUCT_SERVICE_NAME = "ProductService";
+export const PRODUCT_SERVICE_NAME = 'ProductService';

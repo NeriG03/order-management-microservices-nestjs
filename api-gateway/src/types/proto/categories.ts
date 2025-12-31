@@ -5,18 +5,17 @@
 // source: proto/categories.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "categories";
+export const protobufPackage = 'categories';
 
 export interface GetCategoryIDReq {
   categoryId: number;
 }
 
 /** Empty request for getting all categories */
-export interface GetCategoriesReq {
-}
+export interface GetCategoriesReq {}
 
 export interface CategoryRes {
   categoryId: number;
@@ -41,7 +40,7 @@ export interface DeleteCategoryRes {
   message: string;
 }
 
-export const CATEGORIES_PACKAGE_NAME = "categories";
+export const CATEGORIES_PACKAGE_NAME = 'categories';
 
 export interface CategoryServiceClient {
   getCategory(request: GetCategoryIDReq): Observable<CategoryRes>;
@@ -56,13 +55,21 @@ export interface CategoryServiceClient {
 }
 
 export interface CategoryServiceController {
-  getCategory(request: GetCategoryIDReq): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes;
+  getCategory(
+    request: GetCategoryIDReq,
+  ): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes;
 
-  getCategories(request: GetCategoriesReq): Promise<CategoryListRes> | Observable<CategoryListRes> | CategoryListRes;
+  getCategories(
+    request: GetCategoriesReq,
+  ): Promise<CategoryListRes> | Observable<CategoryListRes> | CategoryListRes;
 
-  createCategory(request: CreateCategoryReq): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes;
+  createCategory(
+    request: CreateCategoryReq,
+  ): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes;
 
-  updateCategory(request: UpdateCategoryReq): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes;
+  updateCategory(
+    request: UpdateCategoryReq,
+  ): Promise<CategoryRes> | Observable<CategoryRes> | CategoryRes;
 
   deleteCategory(
     request: GetCategoryIDReq,
@@ -72,22 +79,26 @@ export interface CategoryServiceController {
 export function CategoryServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "getCategory",
-      "getCategories",
-      "createCategory",
-      "updateCategory",
-      "deleteCategory",
+      'getCategory',
+      'getCategories',
+      'createCategory',
+      'updateCategory',
+      'deleteCategory',
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("CategoryService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('CategoryService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("CategoryService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('CategoryService', method)(
+        constructor.prototype[method],
+        method,
+        descriptor,
+      );
     }
   };
 }
 
-export const CATEGORY_SERVICE_NAME = "CategoryService";
+export const CATEGORY_SERVICE_NAME = 'CategoryService';

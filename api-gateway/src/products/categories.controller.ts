@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  OnModuleInit,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Controller, Delete, Get, Inject, OnModuleInit, Param, Patch, Post } from '@nestjs/common';
 import { ClientGrpc, Payload } from '@nestjs/microservices';
 import {
   CATEGORIES_PACKAGE_NAME,
@@ -25,9 +16,7 @@ export class CategoriesController implements OnModuleInit {
   constructor(@Inject(CATEGORIES_PACKAGE_NAME) private client: ClientGrpc) {}
 
   onModuleInit() {
-    this.categoriesService = this.client.getService<CategoryServiceClient>(
-      CATEGORY_SERVICE_NAME,
-    );
+    this.categoriesService = this.client.getService<CategoryServiceClient>(CATEGORY_SERVICE_NAME);
   }
 
   @Post()
@@ -46,10 +35,7 @@ export class CategoriesController implements OnModuleInit {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Payload() updateCategoryDto: UpdateCategoryDto,
-  ) {
+  update(@Param('id') id: string, @Payload() updateCategoryDto: UpdateCategoryDto) {
     return this.categoriesService.updateCategory({
       categoryId: +id,
       ...updateCategoryDto,
