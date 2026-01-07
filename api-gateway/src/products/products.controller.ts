@@ -1,12 +1,19 @@
-import { Controller, Delete, Get, Inject, OnModuleInit, Param, Patch, Post } from '@nestjs/common';
-import { ClientGrpc, MessagePattern, Payload } from '@nestjs/microservices';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import {
-  PRODUCT_SERVICE_NAME,
-  PRODUCTS_PACKAGE_NAME,
-  ProductServiceClient,
-} from 'src/types/proto/products';
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  OnModuleInit,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import type { ClientGrpc } from '@nestjs/microservices';
+import * as CreateProductDtoNamespace from './dto/create-product.dto';
+import * as UpdateProductDtoNamespace from './dto/update-product.dto';
+import type { ProductServiceClient } from 'src/types/proto/products';
+import { PRODUCT_SERVICE_NAME, PRODUCTS_PACKAGE_NAME } from 'src/types/proto/products';
 
 @Controller('products')
 export class ProductsController implements OnModuleInit {
@@ -18,7 +25,7 @@ export class ProductsController implements OnModuleInit {
   }
 
   @Post()
-  create(@Payload() createProductDto: CreateProductDto) {
+  create(@Body() createProductDto: CreateProductDtoNamespace.CreateProductDto) {
     return this.productsService.createProduct(createProductDto);
   }
 
@@ -35,7 +42,10 @@ export class ProductsController implements OnModuleInit {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Payload() updateProductDto: UpdateProductDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateProductDto: UpdateProductDtoNamespace.UpdateProductDto,
+  ) {
     return this.productsService.updateProduct({
       productId: +id,
       ...updateProductDto,

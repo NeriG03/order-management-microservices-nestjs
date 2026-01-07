@@ -1,12 +1,19 @@
-import { Controller, Delete, Get, Inject, OnModuleInit, Param, Patch, Post } from '@nestjs/common';
-import { ClientGrpc, Payload } from '@nestjs/microservices';
 import {
-  CATEGORIES_PACKAGE_NAME,
-  CATEGORY_SERVICE_NAME,
-  CategoryServiceClient,
-} from 'src/types/proto/categories';
-import { UpdateCategoryDto } from './dto/update-category.dto';
-import { CreateCategoryDto } from './dto/create-category.dto';
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  OnModuleInit,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import type { ClientGrpc } from '@nestjs/microservices';
+import type { CategoryServiceClient } from 'src/types/proto/categories';
+import { CATEGORIES_PACKAGE_NAME, CATEGORY_SERVICE_NAME } from 'src/types/proto/categories';
+import * as CreateCategoryDtoNamespace from './dto/create-category.dto';
+import * as UpdateCategoryDtoNamespace from './dto/update-category.dto';
 
 @Controller('categories')
 export class CategoriesController implements OnModuleInit {
@@ -18,7 +25,7 @@ export class CategoriesController implements OnModuleInit {
   }
 
   @Post()
-  create(@Payload() createCategoryDto: CreateCategoryDto) {
+  create(@Body() createCategoryDto: CreateCategoryDtoNamespace.CreateCategoryDto) {
     return this.categoriesService.createCategory(createCategoryDto);
   }
 
@@ -33,7 +40,10 @@ export class CategoriesController implements OnModuleInit {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Payload() updateCategoryDto: UpdateCategoryDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateCategoryDto: UpdateCategoryDtoNamespace.UpdateCategoryDto,
+  ) {
     return this.categoriesService.updateCategory({
       categoryId: +id,
       ...updateCategoryDto,

@@ -1,12 +1,9 @@
-import { Controller, Delete, Get, Inject, OnModuleInit, Param, Post } from '@nestjs/common';
-import { ClientGrpc, Payload } from '@nestjs/microservices';
+import { Body, Controller, Delete, Get, Inject, OnModuleInit, Param, Post } from '@nestjs/common';
+import type { ClientGrpc } from '@nestjs/microservices';
 
-import {
-  ORDERS_PACKAGE_NAME,
-  ORDER_SERVICE_NAME,
-  OrderServiceClient,
-} from 'src/types/proto/orders';
-import { CreateOrderDto } from './dto/create-order.dto';
+import type { OrderServiceClient } from 'src/types/proto/orders';
+import { ORDERS_PACKAGE_NAME, ORDER_SERVICE_NAME } from 'src/types/proto/orders';
+import * as CreateOrderDtoNamespace from './dto/create-order.dto';
 
 @Controller('orders')
 export class OrdersController implements OnModuleInit {
@@ -18,7 +15,7 @@ export class OrdersController implements OnModuleInit {
   }
 
   @Post()
-  create(@Payload() createOrderDto: CreateOrderDto) {
+  create(@Body() createOrderDto: CreateOrderDtoNamespace.CreateOrderDto) {
     return this.ordersService.createOrder(createOrderDto);
   }
 
