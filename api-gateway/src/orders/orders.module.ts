@@ -12,7 +12,7 @@ import { join } from 'path';
         transport: Transport.GRPC,
         options: {
           package: ORDERS_PACKAGE_NAME,
-          protoPath: join(__dirname, '../orders.proto'),
+          protoPath: join(process.cwd(), 'proto/orders.proto'),
           url: 'localhost:50052',
         },
       },

@@ -14,7 +14,7 @@ import { CATEGORIES_PACKAGE_NAME } from 'src/types/proto/categories';
         transport: Transport.GRPC,
         options: {
           package: PRODUCTS_PACKAGE_NAME,
-          protoPath: join(__dirname, '../products.proto'),
+          protoPath: join(process.cwd(), 'proto/products.proto'),
           url: 'localhost:50051',
         },
       },
@@ -23,7 +23,7 @@ import { CATEGORIES_PACKAGE_NAME } from 'src/types/proto/categories';
         transport: Transport.GRPC,
         options: {
           package: CATEGORIES_PACKAGE_NAME,
-          protoPath: join(__dirname, '../categories.proto'),
+          protoPath: join(process.cwd(), 'proto/categories.proto'),
           url: 'localhost:50051',
         },
       },

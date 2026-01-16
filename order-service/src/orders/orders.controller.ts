@@ -44,7 +44,7 @@ export class OrdersController implements OrderServiceController {
     };
   }
 
-  getOrder(request: GetOrderIDReq): Promise<OrderRes> | Observable<OrderRes> | OrderRes {
+  async getOrder(request: GetOrderIDReq): Promise<OrderRes> {
     return this.ordersService.findOne(request.orderId).then(order => ({
       orderId: order.id,
       details: order.details.map(detail => ({
@@ -58,7 +58,7 @@ export class OrdersController implements OrderServiceController {
     }));
   }
 
-  getOrders(request: GetOrdersReq): Promise<OrderListRes> {
+  async getOrders(request: GetOrdersReq): Promise<OrderListRes> {
     return this.ordersService.findAll().then(orders => ({
       orders: orders.map(order => ({
         orderId: order.id,
@@ -74,9 +74,7 @@ export class OrdersController implements OrderServiceController {
     }));
   }
 
-  deleteOrder(
-    request: GetOrderIDReq,
-  ): Promise<DeleteOrderRes> | Observable<DeleteOrderRes> | DeleteOrderRes {
+  async deleteOrder(request: GetOrderIDReq): Promise<DeleteOrderRes> {
     return this.ordersService.remove(request.orderId);
   }
 }
